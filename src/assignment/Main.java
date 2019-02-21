@@ -9,15 +9,15 @@ public class Main {
 
 class NamePrinter {
     /**
-     * Prints the names of the group members separated by spaces.
+     * Prints the names of all group members separated by a specified separator token.
      */
     public void printNames() {
-        String separator = "-";
+        String separator = ",";
 
         String[] names = {
-                "Name 1",
+                "Matthew Wethington",
                 "Yoseph Wordofa",
-                "Name 3",
+                "Jonathan Guidry",
                 "Name 4",
                 "Name 5"};
 
