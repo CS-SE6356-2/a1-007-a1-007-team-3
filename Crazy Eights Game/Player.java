@@ -6,21 +6,49 @@
  * Our semester project is the card game Crazy Eights implemented in Java.
  */
 
+import java.util.*;
+
 /**
  * This class is for constructing players, one of the most fundamental units of any game.
+ * The player will hold its cards. No need for an external data structure to do this as that will add performance overhead.
  * @author Matthew Wethington, Martin Boerwinkle, Jonathan Guidry, Yoseph Wordofa
  */
 public class Player
 {
-    private Hand playerhand;
+    private int numcards;
+    private int score;
+    private ArrayList<Card> cards;
     
-    public Player(Hand hand)
+    public Player()
     {
-        playerhand = hand;
+        numcards = 0;
+        score = 0;
+        cards = new ArrayList<Card>();
+    }
+    
+    public void PullFromDeck(Deck deck)
+    {
+        cards.add(deck.GetTopCard());
+    }
+    
+    public void PlayCard(Card card)
+    {
+        //Do stuff here.
+    }
+    
+    public void GetContents()
+    {
+        //This will be working with the UserInterface class.
+        //We'll do stuff here later.
+    }
+    
+    public int GetScore()
+    {
+        return score;
     }
     
     public int GetCardQuantity()
     {
-        return playerhand.GetQuantity();
+        return numcards;
     }
 }
