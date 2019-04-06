@@ -24,10 +24,18 @@ public class Control
     {
         Scanner in = new Scanner(System.in);
         //Get the number of players playing the game
-        int numplayers;
-        System.out.println("How Many Players Will Be Playing Crazy Eights For This Session?");
-        numplayers = in.nextInt();
-        in.nextLine();//Set the read pointer to the next line and throw away the rest of the input that wasn't a number.
+        int numplayers = 0;
+        while(numplayers < 2)
+        {
+            System.out.println("How Many Players Will Be Playing Crazy Eights For This Session?");
+            numplayers = in.nextInt();
+            in.nextLine();//Set the read pointer to the next line and throw away the rest of the input that wasn't a number.
+            
+            if(numplayers < 1)
+                System.out.println("Invalid Number Of Players. Number Of Players Must Be In Range [2, 7].");
+            else if(numplayers > 7)
+                System.out.println("Too Many Players. Maximum Allowed Is 7.");
+        }
         
         //Construct the list of players.
         Player players[] = new Player[numplayers];
@@ -36,6 +44,7 @@ public class Control
             players[i] = new Player();
         }
         
+        System.out.println("Constructing Deck And Discard Pile.");
         //Declare and initialize the deck and discard pile
         DiscardPile discardpile = new DiscardPile();
         Deck gamedeck = new Deck();
@@ -57,7 +66,15 @@ public class Control
             gamedeck.InsertCard(new Card(Diamonds, i));
         }
         
+        System.out.println("Starting Game.");
         //Start the game here (wait for the user interface to take shape)
-        //Further to-do game logic here
+        UserInterface UI = new UserInterface();
+        UI.SetCurrentPlayer(players[0]);//Player 1 gets to start the game
+        while(true)//The game goes on until someone wins
+        {
+            //Further to-do game logic here
+            break;//Dummy statement to prevent infinite loop for this incomplete build
+        }
+        System.out.println("Thanks For Playing!");
     }
 }
