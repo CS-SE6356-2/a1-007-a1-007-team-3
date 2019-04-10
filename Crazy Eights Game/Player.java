@@ -29,6 +29,7 @@ public class Player
     public void PullFromDeck(Deck deck)
     {
         cards.add(deck.GetTopCard());
+        numcards = cards.size();
     }
     
     public void PlayCard(Card card)
@@ -36,10 +37,9 @@ public class Player
         //Do stuff here.
     }
     
-    public void GetContents()
+    public ArrayList<Card> GetContents()
     {
-        //This will be working with the UserInterface class.
-        //We'll do stuff here later.
+        return new ArrayList<Card>(cards);
     }
     
     public int GetScore()

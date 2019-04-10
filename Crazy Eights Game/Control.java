@@ -50,14 +50,24 @@ public class Control
                 gamedeck.InsertCard(new Card(s, r));
             }
         }
+        gamedeck.Shuffle();
+        //Temporary Deal routine
+
+        for(Player p : players)
+        {
+            p.PullFromDeck(gamedeck);
+        }
+
+        //End temporary deal routine
         System.out.println("Starting Game.");
         //Start the game here (wait for the user interface to take shape)
         UserInterface UI = new UserInterface();
-        UI.SetCurrentPlayer(players[0]);//Player 1 gets to start the game
-        while(true)//The game goes on until someone wins
+        int playerIdx = 0;
+        while(players[playerIdx].GetCardQuantity() != 0)//The game goes on until someone wins
         {
-            //Further to-do game logic here
-            break;//Dummy statement to prevent infinite loop for this incomplete build
+            System.out.println("Launching UI for player "+playerIdx+"!");
+            UI.SetCurrentPlayer(players[playerIdx]);//Player 1 gets to start the game
+            playerIdx = (playerIdx+1)%numplayers;
         }
         System.out.println("Thanks For Playing!");
     }
