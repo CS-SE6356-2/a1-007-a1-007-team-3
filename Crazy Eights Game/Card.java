@@ -12,21 +12,21 @@
  */
 public class Card
 {
-    private int suit;
-    private int rank;
+    private Suit suit;
+    private Rank rank;
     
-    public Card(int suit, int rank)
+    public Card(Suit suit, Rank rank)
     {
         this.suit = suit;
         this.rank = rank;
     }
     
-    public int GetSuit()
+    public Suit GetSuit()
     {
         return suit;
     }
     
-    public int GetRank()
+    public Rank GetRank()
     {
         return rank;
     }

@@ -13,13 +13,7 @@ import java.util.*;
  * @author Matthew Wethington, Martin Boerwinkle, Jonathan Guidry, Yoseph Wordofa
  */
 public class Control
-{
-    //Enumerations for suit types
-    final static int Hearts = 1;
-    final static int Clubs = 2;
-    final static int Spades = 3;
-    final static int Diamonds = 4;
-    
+{    
     public static void main(String args[])
     {
         Scanner in = new Scanner(System.in);
@@ -49,23 +43,13 @@ public class Control
         DiscardPile discardpile = new DiscardPile();
         Deck gamedeck = new Deck();
         //Populate the deck with 52 cards, the standard deck size.
-        for(int i = 1; i <= 13; i++)
+        for(Rank r : Rank.values())
         {
-            gamedeck.InsertCard(new Card(Hearts, i));
+            for(Suit s : Suit.values())
+            {
+                gamedeck.InsertCard(new Card(s, r));
+            }
         }
-        for(int i = 1; i <= 13; i++)
-        {
-            gamedeck.InsertCard(new Card(Clubs, i));
-        }
-        for(int i = 1; i <= 13; i++)
-        {
-            gamedeck.InsertCard(new Card(Spades, i));
-        }
-        for(int i = 1; i <= 13; i++)
-        {
-            gamedeck.InsertCard(new Card(Diamonds, i));
-        }
-        
         System.out.println("Starting Game.");
         //Start the game here (wait for the user interface to take shape)
         UserInterface UI = new UserInterface();
