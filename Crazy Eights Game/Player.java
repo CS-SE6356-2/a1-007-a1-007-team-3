@@ -32,9 +32,19 @@ public class Player
         numcards = cards.size();
     }
     
-    public void PlayCard(Card card)
+    public void PlayCard(Card card, DiscardPile target) throws Exception
     {
-        //Do stuff here.
+        if(card.GetRank() != target.GetRequiredRank() && card.GetSuit() != target.GetRequiredSuit() && card.GetRank() != Rank.EIGHT)
+        {
+            throw new Exception("Unplayable Card");
+        }
+        if(!cards.contains(card))
+        {
+            throw new Exception("Card not in Hand!");
+        }
+        cards.remove(card);
+        numcards = cards.size();
+        target.InsertCard(card);
     }
     
     public ArrayList<Card> GetContents()

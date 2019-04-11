@@ -15,10 +15,15 @@ import java.util.*;
 public class UserInterface
 {
     private Player currentplayer;
+    private DiscardPile discardpile;
+    private Deck gamedeck;
+    private Scanner in;
     
-    public UserInterface()
+    public UserInterface(Deck gamedeck, DiscardPile discardpile, Scanner in)
     {
-        
+        this.gamedeck = gamedeck;
+        this.discardpile = discardpile;
+        this.in = in;
     }
     
     public void SetCurrentPlayer(Player player)
@@ -34,6 +39,29 @@ public class UserInterface
         for(Card c : currentHand)
         {
             System.out.println("Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
+        }
+        System.out.println("Discard Pile has "+discardpile.size()+" cards!");
+        System.out.println("You must play a "+discardpile.GetRequiredRank()+" or a "+discardpile.GetRequiredSuit()+"!");
+        System.out.println("Which card do you want to play? (-1 for draw)");
+        boolean done = false;
+        while(!done)
+        {
+            try
+            {
+                int reqCard = in.nextInt();
+                in.nextLine();
+                if(reqCard == -1)
+                {
+                    currentplayer.PullFromDeck(gamedeck);
+                    done = true;
+                    continue;
+                }
+                currentplayer.PlayCard(currentHand.get(reqCard), discardpile);
+                done = true;
+            }catch(Exception e)
+            {
+                System.out.println(e);
+            }
         }
     }
 }

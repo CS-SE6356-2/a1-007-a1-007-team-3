@@ -55,7 +55,7 @@ public class Control
         gamedeck.Deal(players);
         System.out.println("Starting Game.");
         //Start the game here (wait for the user interface to take shape)
-        UserInterface UI = new UserInterface();
+        UserInterface UI = new UserInterface(gamedeck, discardpile, in);
         int playerIdx = 0;
         while(players[playerIdx].GetCardQuantity() != 0)//The game goes on until someone wins
         {

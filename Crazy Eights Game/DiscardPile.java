@@ -18,6 +18,11 @@ public class DiscardPile
     Suit requiredSuit;
     Rank requiredRank;
 
+    public int size()
+    {
+        return cards.size();
+    }
+
     public Rank GetRequiredRank()
     {
         return requiredRank;
