@@ -23,7 +23,25 @@ public class Deck
     
     public void Shuffle()
     {
-        //First we need to decide whether we will do discrete step shuffling or completely random shuffling.
+        System.out.println("Preshuffle size " + cards.size());
+        for(int iter = 0; iter < 100; iter++)
+        {
+            Stack<Card> A = new Stack<Card>();
+            Stack<Card> B = new Stack<Card>();
+            while(cards.size() > 0)
+            {
+                if(Math.random() < 0.5)
+                {
+                    A.push(cards.pop());
+                }else
+                {
+                    B.push(cards.pop());
+                }
+            }
+            cards.addAll(A);
+            cards.addAll(B);
+        }
+        System.out.println("Postshuffle size " + cards.size());
     }
     
     public void InsertCard(Card card)//Insert a card onto the top of the deck
@@ -49,8 +67,15 @@ public class Deck
         return returnthis;
     }
     
-    public void Deal()//Deal the cards to players
+    public void Deal(Player playerlist[])//Deal the cards to players
     {
-        
+        int cardQuantity = (playerlist.length > 2) ? 5 : 7;
+        for(Player p : playerlist)
+        {
+            for(int x = 0; x < cardQuantity; x++)
+            {
+                p.PullFromDeck(this);
+            }
+        }
     }
 }

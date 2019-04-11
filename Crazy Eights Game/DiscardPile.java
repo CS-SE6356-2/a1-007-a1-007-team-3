@@ -15,6 +15,18 @@ import java.util.*;
 public class DiscardPile
 {
     Stack<Card> cards;
+    Suit requiredSuit;
+    Rank requiredRank;
+
+    public Rank GetRequiredRank()
+    {
+        return requiredRank;
+    }
+
+    public Suit GetRequiredSuit()
+    {
+        return requiredSuit;
+    }
     
     public DiscardPile()
     {
@@ -24,16 +36,18 @@ public class DiscardPile
     public void InsertCard(Card card)//Insert a card onto the top of the deck
     {
         cards.push(card);
+        requiredRank = card.GetRank();
+        requiredSuit = card.GetSuit();
     }
     
-    public Card GetTopCard()//Get the top card from the deck
+    /*public Card GetTopCard()//Get the top card from the deck
     {
         return cards.pop();
-    }
+    }*///We should never remove the top card from the discard pile
     
-    public void TransferToDeck(Deck deck)//Transfer the entire discard pile back to the specified deck
+    public void TransferToDeck(Deck deck)//Transfer all but one of the discard pile back to the deck
     {
-        while(!cards.empty())
+        while(cards.size() > 1)
         {
             deck.InsertCard(cards.pop());
         }

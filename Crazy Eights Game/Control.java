@@ -51,14 +51,8 @@ public class Control
             }
         }
         gamedeck.Shuffle();
-        //Temporary Deal routine
-
-        for(Player p : players)
-        {
-            p.PullFromDeck(gamedeck);
-        }
-
-        //End temporary deal routine
+        discardpile.InsertCard(gamedeck.GetTopCard()); //Prime the discard pile
+        gamedeck.Deal(players);
         System.out.println("Starting Game.");
         //Start the game here (wait for the user interface to take shape)
         UserInterface UI = new UserInterface();
