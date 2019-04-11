@@ -57,12 +57,18 @@ public class Control
         //Start the game here (wait for the user interface to take shape)
         UserInterface UI = new UserInterface(gamedeck, discardpile, in);
         int playerIdx = 0;
-        while(players[playerIdx].GetCardQuantity() != 0)//The game goes on until someone wins
+        int winner = -1;
+        while(winner == -1)//The game goes on until someone wins
         {
             System.out.println("Launching UI for player "+playerIdx+"!");
             UI.SetCurrentPlayer(players[playerIdx]);//Player 1 gets to start the game
+            if(players[playerIdx].GetCardQuantity() == 0)
+            {
+                winner = playerIdx;
+            }
             playerIdx = (playerIdx+1)%numplayers;
         }
+        System.out.println("Winner is player "+winner);
         System.out.println("Thanks For Playing!");
     }
 }
