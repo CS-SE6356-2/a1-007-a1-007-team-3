@@ -41,7 +41,7 @@ public class Control
         System.out.println("Constructing Deck And Discard Pile.");
         //Declare and initialize the deck and discard pile
         DiscardPile discardpile = new DiscardPile();
-        Deck gamedeck = new Deck();
+        Deck gamedeck = new Deck(discardpile);
         //Populate the deck with 52 cards, the standard deck size.
         for(Rank r : Rank.values())
         {

@@ -15,10 +15,12 @@ import java.util.*;
 public class Deck
 {
     Stack<Card> cards;
+    DiscardPile linkedPile;
     
-    public Deck()
+    public Deck(DiscardPile linkedPile)
     {
         cards = new Stack<Card>();
+        this.linkedPile = linkedPile;
     }
     
     public void Shuffle()
@@ -51,6 +53,11 @@ public class Deck
     
     public Card GetTopCard()//Get the top card from the deck
     {
+        if(cards.size() == 0)
+        {
+            linkedPile.TransferToDeck(this);
+            Shuffle();
+        }
         return cards.pop();
     }
     
