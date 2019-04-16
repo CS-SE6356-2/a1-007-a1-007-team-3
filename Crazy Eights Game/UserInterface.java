@@ -60,7 +60,8 @@ public class UserInterface
                 done = true;
             }catch(Exception e)
             {
-                System.out.println(e);
+                System.out.println("Invalid Input. Please Try Again.");
+                in.nextLine();//Consume the remaining invalid tokens to prevent an infinite error loop
             }
         }
     }
