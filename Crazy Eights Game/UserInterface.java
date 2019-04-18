@@ -34,22 +34,25 @@ public class UserInterface
 
     public void displayView()
     {
-        System.out.println("You have "+currentplayer.GetCardQuantity()+" cards!");
+        System.out.println("You Have "+currentplayer.GetCardQuantity()+" Cards!");
         ArrayList<Card> currentHand = currentplayer.GetContents();
+        int i = 1;
         for(Card c : currentHand)
         {
-            System.out.println("Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
+            System.out.println("Card " + i + ":");
+            System.out.println("Rank: "+c.GetRank());
+            System.out.println("Suit: "+c.GetSuit());
+            i++;
         }
-        System.out.println("Discard Pile has "+discardpile.size()+" cards!");
-        System.out.println("You must play a "+discardpile.GetRequiredRank()+" or a "+discardpile.GetRequiredSuit()+"!");
-        System.out.println("Which card do you want to play? (-1 for draw)");
+        System.out.println("Discard Pile Has "+discardpile.size()+" Cards!");
+        System.out.println("You Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+"!");
+        System.out.println("Which Card Do You Want To Play? (Specify Using Card #. Type -1 For Draw)");
         boolean done = false;
         while(!done)
         {
             try
             {
                 int reqCard = in.nextInt();
-                in.nextLine();
                 if(reqCard == -1)
                 {
                     currentplayer.PullFromDeck(gamedeck);
@@ -60,7 +63,7 @@ public class UserInterface
                 done = true;
             }catch(Exception e)
             {
-                System.out.println("Invalid Input. Please Try Again.");
+                System.out.println(e);
                 in.nextLine();//Consume the remaining invalid tokens to prevent an infinite error loop
             }
         }

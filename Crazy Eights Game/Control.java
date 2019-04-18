@@ -59,14 +59,14 @@ public class Control {
             int winner = -1;
             while (winner == -1)//The game goes on until someone wins
             {
-                System.out.println("Launching UI for player " + (playerIdx+1) + "!");//Player number is their index + 1
+                System.out.println("Launching UI For Player " + (playerIdx+1) + "!");//Player number is their index + 1
                 UI.SetCurrentPlayer(players[playerIdx]);//Player 1 gets to start the game
                 if (players[playerIdx].GetCardQuantity() == 0)
                     winner = playerIdx;
                 playerIdx = (playerIdx + 1) % numplayers;
             }
-            System.out.println("Winner is player " + (winner+1));
-            System.out.println("Want To Play Another Round? (Respond Using Y For Yes Or N For No)");
+            System.out.println("Winner Is Player " + (winner+1));
+            System.out.println("Want To Play Another Game Session? (Respond Using Y For Yes Or N For No)");
             int responsegotten = 0;
             
             while (responsegotten == 0)
