@@ -59,7 +59,7 @@ public class UserInterface
                     done = true;
                     continue;
                 }
-                currentplayer.PlayCard(currentHand.get(reqCard), discardpile);
+                currentplayer.PlayCard(currentHand.get(reqCard-1), discardpile);
                 done = true;
             }catch(Exception e)
             {
