@@ -22,8 +22,7 @@ public class GUI extends JFrame {
     private JButton button1;
     private JTextField textfield1;
     JPanel contentPane;
-    private ArrayList<JButton> cards;
-    private JButton temp;
+    public ArrayList<JButton> cards;
 
     public GUI()
     {
@@ -103,23 +102,26 @@ public class GUI extends JFrame {
         menuBar.add(help);
     }
     
-    public void addCard(int x, int y, int width, int height, int cardnum)//Adds a card to the screen
+    public void addCard(int x, int y, int width, int height)//Adds a card to the screen
     {
-        temp = new JButton();
+        JButton temp = new JButton();
         temp.setBounds(x, y, width, height);
         temp.setBackground(new Color(214,217,223));
         temp.setForeground(new Color(0,0,0));
         temp.setEnabled(true);
         temp.setFont(new Font("sansserif",0,12));
-        temp.setText("Card " + cardnum);
         temp.setVisible(true);
         cards.add(temp);
-        contentPane.add(cards.get(cardnum-1));
+        contentPane.add(cards.get(cards.size()-1));//Add the most recently added ArrayList element to the contentPane
         this.add(contentPane);
     }
     
-    public void removeCard()//Removes a card from the screen
+    public void removeCard(int cardindex)//Removes a card from the screen
     {
-        
+        cards.get(cardindex).setEnabled(false);
+        cards.get(cardindex).setVisible(false);
+        contentPane.remove(cards.get(cardindex));
+        this.add(contentPane);
+        //cards.remove(cardindex);//No need to remove cards anymore. Just overwrite the data if the card isn't visible.
     }
 }

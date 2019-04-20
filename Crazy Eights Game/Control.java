@@ -7,6 +7,7 @@
  */
 
 import java.util.*;
+import java.awt.event.*;
 
 /**
  * This class is the game engine. It takes care of all game logic.
@@ -132,9 +133,12 @@ public class Control
                 GUI game = new GUI();
                 game.setVisible(true);
                 
-                for (int i = 1; i < 8; i++)
+                for (int i = 0; i < 7; i++)
                 {
-                    game.addCard(i*80 + i*10, 400, 80, 120, i);
+                    game.addCard(80 + i*80 + i*10, 400, 80, 120);
+                    game.cards.get(i).setText("Card " + (i+1));
+                    final int temp = i;//Solves stupid local variables referenced from an inner class must be final or effectively final error
+                    game.cards.get(i).addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){game.removeCard(temp);}});
                 }
                 break;
             //Should not get here. If we do, something went terribly wrong.
