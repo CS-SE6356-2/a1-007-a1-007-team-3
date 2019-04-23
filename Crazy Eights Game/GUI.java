@@ -115,8 +115,8 @@ public class GUI extends JFrame {
         for (Card i : hand)
         {
             //ordinal() gets the index of enumerators
-            x = i.suit.ordinal();
-            y = i.rank.ordinal();
+            x = i.GetSuit().ordinal();
+            y = i.GetRank().ordinal();
             //Test purposes only, we want to display this information to the user graphically
             System.out.println("The " + i.GetRank() + " of " + i.GetSuit() + " is located in position (" + x + "," + y + ") of the spritesheet.");
             //Using those coordinates, we can get the real position of the card on the spritesheet by multiplying x and y by the dimensions of the actual card
