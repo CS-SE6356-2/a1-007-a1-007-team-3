@@ -12,8 +12,8 @@
  */
 public class Card
 {
-    private Suit suit;
-    private Rank rank;
+    Suit suit;
+    Rank rank;
     
     public Card(Suit suit, Rank rank)
     {
