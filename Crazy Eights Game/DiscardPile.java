@@ -45,16 +45,13 @@ public class DiscardPile
         requiredSuit = card.GetSuit();
     }
     
-    /*public Card GetTopCard()//Get the top card from the deck
+    public void TransferToDeck(Deck deck)//Transfer all but the last card played back to the deck
     {
-        return cards.pop();
-    }*///We should never remove the top card from the discard pile
-    
-    public void TransferToDeck(Deck deck)//Transfer all but one of the discard pile back to the deck
-    {
-        while(cards.size() > 1)
+        Card lastcardplayed = cards.pop();//The last card played is the top card on the discard pile
+        for (Card c : cards)
         {
             deck.InsertCard(cards.pop());
         }
+        cards.push(lastcardplayed);
     }
 }

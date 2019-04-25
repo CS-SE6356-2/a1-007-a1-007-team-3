@@ -45,7 +45,7 @@ public class UserInterface
             i++;
         }
         System.out.println("Discard Pile Has "+discardpile.size()+" Cards!");
-        System.out.println("You Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+"!");
+        System.out.println("You Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+"Or An EIGHT!");
         System.out.println("Which Card Do You Want To Play? (Specify Using Card #. Type -1 For Draw)");
         boolean done = false;
         while(!done)
