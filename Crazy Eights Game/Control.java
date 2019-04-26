@@ -5,6 +5,9 @@
  * Dr. Marcus
  * Our semester project is the card game Crazy Eights implemented in Java.
  */
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import java.util.*;
 import java.awt.event.*;
@@ -35,6 +38,9 @@ public class Control
         System.out.println("Specify Selection By Entering In 1 Or 2.");
         int startresponse = 0;
         boolean validresponse = false;
+        
+        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+
         while (!validresponse)//Get the input for the mode we want to run the game in
         {
             try
@@ -59,6 +65,12 @@ public class Control
                 while (done == 0)
                 {
                     prepareNewGame();
+                    
+                    //get randome player from the selected amount of players so the user can always be random
+                    Random rand = new Random();
+                    int n = rand.nextInt(numplayers);                    
+                    JOptionPane.showMessageDialog(frame,"****** You are player: #"+(n+1)+ " *****");
+                    
                     UserInterface UI = new UserInterface(gamedeck, discardpile, in);
                     
                     //The game cycles through each players turn until someone wins
@@ -66,14 +78,33 @@ public class Control
                     int winner = -1;
                     while (winner == -1)
                     {
+                        //this if statment is to controle user
+                        //comment it out if you want AI vs AI
+                        if (playerIdx == n)
+                        {   System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
+                            UI.SetCurrentUserPlayer(players[playerIdx]);//Player n gets to go
+                            if(players[playerIdx].GetCardQuantity() == 0)
+                            {
+                                winner = playerIdx;
+                            }                
+                            playerIdx = (playerIdx+1)%numplayers;
+                        }
+                        
                         System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
                         UI.SetCurrentPlayer(players[playerIdx]);//Player 1 gets to start the game
                         if (players[playerIdx].GetCardQuantity() == 0)
                             winner = playerIdx;
                         playerIdx = (playerIdx + 1) % numplayers;
                     }
-                    System.out.println("Winner Is Player " + (winner + 1));
-                    done = checkDone();
+                      if(winner != n)
+                        {System.out.println("****************You Lost!*******************");               
+                            System.out.println("Winner is player "+ (winner + 1));
+                            //System.out.println("Thanks For Playing!");
+                            done = checkDone();}
+                            else
+                            {System.out.println("****************YOU WON!*******************");
+                             //System.out.println("Thanks For Playing!");
+                             done = checkDone();}
                 }
                 System.out.println("Thanks For Playing!");
                 break;

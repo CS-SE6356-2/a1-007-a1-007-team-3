@@ -50,6 +50,16 @@ public class Player
         }
     }
     
+    boolean PlayAICard(Card card, DiscardPile target)
+    {
+        if(card.GetRank() == target.GetRequiredRank() || card.GetSuit() == target.GetRequiredSuit() || card.GetRank() == Rank.EIGHT)
+        
+            return true;
+        else
+        
+            return false;
+    } 
+    
     public ArrayList<Card> GetContents()
     {
         return new ArrayList<Card>(cards);
