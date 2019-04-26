@@ -29,19 +29,20 @@ public class Control
     public static void main(String args[])
     {
         in = new Scanner(System.in);
-        int done = 0;
+        int done = 0;//Flag to tell us when to terminate the program
 
         //Here comes the initial selection
         System.out.println("What Type Of Interface Would You Like To Use To Play The Game?");
         System.out.println("1. Text Based");
         System.out.println("2. Graphical");
         System.out.println("Specify Selection By Entering In 1 Or 2.");
-        int startresponse = 0;
+        int startresponse = 0;//Graphical mode flag
         boolean validresponse = false;
+        int playermode = 0;//Player mode flag
         
         JFrame frame = new JFrame("JOptionPane showMessageDialog example");
 
-        while (!validresponse)//Get the input for the mode we want to run the game in
+        while (!validresponse)//Get the input for the interface type we want to run the game with
         {
             try
             {
@@ -57,90 +58,163 @@ public class Control
                 in.nextLine();//Consume the remaining invalid tokens to prevent an infinite error loop
             }
         }
+        
+        validresponse = false;//Reset this variable
+        System.out.println("Would You Like To Play Singleplayer Against AI Or Multiplayer Against Other Human Players?");
+        System.out.println("1. Singleplayer Against AI");
+        System.out.println("2. Multiplayer Against Human Players");
+        System.out.println("Specify Selection By Entering In 1 Or 2.");
+        while (!validresponse)//Get the input for the player mode (whether we want to play singleplayer or multiplayer)
+        {
+            try
+            {
+                playermode = in.nextInt();
+                if (playermode > 2 || playermode < 1)
+                    System.out.println("Invalid Response. Please Try Again.");
+                else
+                    validresponse = true;
+            }
+            catch (Exception e)
+            {
+                System.out.println(e);
+                in.nextLine();//Consume the remaining invalid tokens to prevent an infinite error loop
+            }
+        }
 
         switch (startresponse)//Start the game in the specified mode
         {
             //Initialize in text based mode
             case 1:
-                while (done == 0)
+                switch (playermode)
                 {
-                    prepareNewGame();
-                    
-                    //get randome player from the selected amount of players so the user can always be random
-                    Random rand = new Random();
-                    int n = rand.nextInt(numplayers);                    
-                    JOptionPane.showMessageDialog(frame,"****** You are player: #"+(n+1)+ " *****");
-                    
-                    UserInterface UI = new UserInterface(gamedeck, discardpile, in);
-                    
-                    //The game cycles through each players turn until someone wins
-                    int playerIdx = 0;
-                    int winner = -1;
-                    while (winner == -1)
-                    {
-                        //this if statment is to controle user
-                        //comment it out if you want AI vs AI
-                        if (playerIdx == n)
-                        {   System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
-                            UI.SetCurrentUserPlayer(players[playerIdx]);//Player n gets to go
-                            if(players[playerIdx].GetCardQuantity() == 0)
+                    case 1://Singleplayer with text based interface
+                        while (done == 0)
+                        {
+                            prepareNewGame();
+                            
+                            //get randome player from the selected amount of players so the user can always be random
+                            Random rand = new Random();
+                            int n = rand.nextInt(numplayers);
+                            JOptionPane.showMessageDialog(frame,"****** Singleplayer Game Has Been Launched! *****");
+                            JOptionPane.showMessageDialog(frame,"****** You are player: #"+(n+1)+ " *****");
+                            
+                            UserInterface UI = new UserInterface(gamedeck, discardpile, in);
+                            
+                            //The game cycles through each players turn until someone wins
+                            int playerIdx = 0;
+                            int winner = -1;
+                            while (winner == -1)
                             {
-                                winner = playerIdx;
-                            }                
-                            playerIdx = (playerIdx+1)%numplayers;
-                        }
+                                //This if statment is to control the user. Comment it out if you want AI vs AI.
+                                if (playerIdx == n)
+                                {
+                                    System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
+                                    UI.SetCurrentUserPlayer(players[playerIdx]);//Player n gets to go
+                                    if(players[playerIdx].GetCardQuantity() == 0)
+                                    {
+                                        winner = playerIdx;
+                                        continue;//Skip over all other statements in the loop since this player won
+                                    }
+                                    playerIdx = (playerIdx+1)%numplayers;
+                                }
                         
-                        System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
-                        UI.SetCurrentPlayer(players[playerIdx]);//Player 1 gets to start the game
-                        if (players[playerIdx].GetCardQuantity() == 0)
-                            winner = playerIdx;
-                        playerIdx = (playerIdx + 1) % numplayers;
-                    }
-                      if(winner != n)
-                        {System.out.println("****************You Lost!*******************");               
-                            System.out.println("Winner is player "+ (winner + 1));
-                            //System.out.println("Thanks For Playing!");
-                            done = checkDone();}
+                                System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
+                                UI.SetCurrentAIPlayer(players[playerIdx]);//Player 1 gets to start the game
+                                if (players[playerIdx].GetCardQuantity() == 0)
+                                    winner = playerIdx;
+                                playerIdx = (playerIdx + 1) % numplayers;
+                            }
+                            
+                            if(winner != n)
+                            {
+                                System.out.println("****************You Lost!*******************");               
+                                System.out.println("Winner is player "+ (winner + 1));
+                                done = checkDone();
+                            }
                             else
-                            {System.out.println("****************YOU WON!*******************");
-                             //System.out.println("Thanks For Playing!");
-                             done = checkDone();}
+                            {
+                                System.out.println("****************YOU WON!*******************");
+                                done = checkDone();
+                            }
+                        }
+                        break;
+                    case 2://Multiplayer with text based interface
+                        while (done == 0)
+                        {
+                            prepareNewGame();
+                                               
+                            JOptionPane.showMessageDialog(frame,"****** Multiplayer Game Has Been Launched! *****");
+                            
+                            UserInterface UI = new UserInterface(gamedeck, discardpile, in);
+                            
+                            //The game cycles through each players turn until someone wins
+                            int playerIdx = 0;
+                            int winner = -1;
+                            while (winner == -1)
+                            {
+                                System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
+                                UI.SetCurrentUserPlayer(players[playerIdx]);//Player 1 gets to start the game
+                                if (players[playerIdx].GetCardQuantity() == 0)
+                                {
+                                    winner = playerIdx;
+                                    continue;//Skip over all other statements in the loop since this player won
+                                }
+                                playerIdx = (playerIdx + 1) % numplayers;
+                            }
+                                      
+                            System.out.println("Winner is player "+ (winner + 1));
+                            done = checkDone();
+                        }
+                        break;
                 }
+                
                 System.out.println("Thanks For Playing!");
                 break;
             
             //Initialize in GUI mode
             case 2:
-                while (done == 0)
-                {    
-                    prepareNewGame();
-                    System.out.println("Game Will Open In A New Window.");
-                    GUI game = new GUI(gamedeck, discardpile);
-                    game.setVisible(true);
+                switch (playermode)
+                {
+                    case 1://Singleplayer with graphical interface
+                        while (done == 0)
+                        {    
+                            prepareNewGame();
+                            System.out.println("Game Will Open In A New Window.");
+                            GUI game = new GUI(gamedeck, discardpile);
+                            game.setVisible(true);
 
-                    //left this in because i'm not sure if removing it will break anything
-                    for (int i = 0; i < 7; i++)
-                    {
-                        game.addCard(80 + i*80 + i*10, 400, 80, 120);
-                        game.cards.get(i).setText("Card " + (i+1));
-                        final int temp = i;//Solves stupid local variables referenced from an inner class must be final or effectively final error
-                        game.cards.get(i).addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){game.removeCard(temp);}});
-                    }
+                            //left this in because i'm not sure if removing it will break anything
+                            for (int i = 0; i < 7; i++)
+                            {
+                                game.addCard(80 + i*80 + i*10, 400, 80, 120);
+                                game.cards.get(i).setText("Card " + (i+1));
+                                final int temp = i;//Solves stupid local variables referenced from an inner class must be final or effectively final error
+                                game.cards.get(i).addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){game.removeCard(temp);}});
+                            }
 
-                    //The game cycles through each players turn until someone wins
-                    //***Because there is nothing that makes the program stop and wait for the user, right now it will loop forever
-                    int playerIdx = 0;
-                    int winner = -1;    
-                    while (winner == -1)
-                    {
-                        game.setCurrentPlayer(playerIdx);//Player 1 gets to start the game
-                        if (players[playerIdx].GetCardQuantity() == 0)
-                            winner = playerIdx;
-                        playerIdx = (playerIdx + 1) % numplayers;
-                    }
-                    System.out.println("Winner Is Player " + (winner + 1));
-                    done = checkDone();
+                            //The game cycles through each players turn until someone wins
+                            //***Because there is nothing that makes the program stop and wait for the user, right now it will loop forever
+                            int playerIdx = 0;
+                            int winner = -1;    
+                            while (winner == -1)
+                            {
+                                game.setCurrentPlayer(playerIdx);//Player 1 gets to start the game
+                                if (players[playerIdx].GetCardQuantity() == 0)
+                                {
+                                    winner = playerIdx;
+                                    continue;//Skip over all other statements in the loop since this player won
+                                }
+                                playerIdx = (playerIdx + 1) % numplayers;
+                            }
+                            System.out.println("Winner Is Player " + (winner + 1));
+                            done = checkDone();
+                        }
+                        break;
+                    case 2://Multiplayer with graphical interface
+                        //Nothing here yet. Graphical interface and networking need to be finished before we can do anything here.
+                        break;
                 }
+                
                 System.out.println("Thanks For Playing!");
                 break;
                 
@@ -149,6 +223,9 @@ public class Control
                 System.out.println("Critical Error. Terminating Program.");
                 break;
         }
+        //The program keeps getting stuck here after players wish to stop playing, and I don't know why since there aren't any further statements here.
+        //As such, I'm forcing the program to terminate sucessfully. Boom! Problem solved! Take that you stupid hanging program!
+        System.exit(0);
     }
     
     //Sets up everything required to start a new game
@@ -195,6 +272,7 @@ public class Control
     //Prompts the user if they would like to start another game
     public static int checkDone()
     {
+        in.nextLine();//Clear the input buffer of any remaining crap before we get the user's repsonse
         System.out.println("Want To Play Another Game Session? (Respond Using Y For Yes Or N For No)");
         while(true) //probably a better way of doing this, but it shouldnt get stuck
         {

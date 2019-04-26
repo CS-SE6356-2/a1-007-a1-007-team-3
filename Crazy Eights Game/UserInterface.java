@@ -53,7 +53,10 @@ public class UserInterface
             i++;
         }
         System.out.println("Discard Pile Has "+discardpile.size()+" Cards!");
-        System.out.println("You Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+"Or An EIGHT!");
+        if (discardpile.GetRequiredRank() == Rank.EIGHT)//No need to print out "You Must Play A Eight Or A (Some Rank) Or An Eight!". That's weird.
+            System.out.println("You Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+"!");
+        else
+            System.out.println("You Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+" Or An EIGHT!");
         System.out.println("Which Card Do You Want To Play? (Specify Using Card #. Type -1 For Draw)");
         boolean done = false;
         while(!done)
@@ -90,7 +93,10 @@ public class UserInterface
         //} 
         System.out.println("Discard Pile Has "+discardpile.size()+" Cards!");
         System.out.println("Deck has "+gamedeck.GetContents().size()+" cards!");
-        System.out.println("AI Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+" Or An EIGHT!");        
+        if (discardpile.GetRequiredRank() == Rank.EIGHT)
+            System.out.println("AI Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+"!");
+        else
+            System.out.println("AI Must Play A "+discardpile.GetRequiredRank()+" Or A "+discardpile.GetRequiredSuit()+" Or An EIGHT!");  
         boolean done = false;
         while(!done)
         {

@@ -48,7 +48,8 @@ public class DiscardPile
     public void TransferToDeck(Deck deck)//Transfer all but the last card played back to the deck
     {
         Card lastcardplayed = cards.pop();//The last card played is the top card on the discard pile
-        for (Card c : cards)
+        int tempsize = cards.size();//Do NOT call this method in the for loop because the size will be constantly changing. It will lead to strange behavior.
+        for (int i = 0; i < tempsize; i++)
         {
             deck.InsertCard(cards.pop());
         }
