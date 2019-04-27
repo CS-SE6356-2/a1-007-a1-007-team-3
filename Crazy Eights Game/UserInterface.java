@@ -87,10 +87,10 @@ public class UserInterface
         
         ArrayList<Card> currentHand = currentplayer.GetContents();
         //no need to show AIs hand, that's cheating! shame on u! lol
-        //for(Card c : currentHand)
-        //{
-          //  System.out.println("Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
-        //} 
+        // for(Card c : currentHand)
+        // {
+           // System.out.println("Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
+        // } 
         System.out.println("Discard Pile Has "+discardpile.size()+" Cards!");
         System.out.println("Deck has "+gamedeck.GetContents().size()+" cards!");
         if (discardpile.GetRequiredRank() == Rank.EIGHT)
@@ -103,31 +103,67 @@ public class UserInterface
             try
             {
                 for(int i=0; i < currentplayer.GetCardQuantity(); i++) //go through all cards in hand
-                    {
-                        Card c = currentHand.get(i);//get card values
-                     if(currentplayer.PlayAICard(currentHand.get(i), discardpile) == false)//if card doesnt match = false
+                   {
+                        Card c = currentHand.get(i);//get card values                        
+                        if(currentplayer.PlayAICard(currentHand.get(i), discardpile) == 0)//if rank match eight only skip that and test other cards condition
                         { 
-                            if(i+1 >= currentplayer.GetCardQuantity())//if all cards don't match = pull
+                            int card_with_eight = 0; 
+                            card_with_eight = card_with_eight + i;//save card with eight   
+                           for(int j=0; j < currentplayer.GetCardQuantity(); j++)
                            {
-                            System.out.println("The AI has pulled a card from deck!");
-                            currentplayer.PullFromDeck(gamedeck);
-                            done = true;
+                               Card c2 = currentHand.get(j);
+                             if(currentplayer.PlayAICard3(currentHand.get(j), discardpile) != 1)
+                             {                              
+                               if (j+1 >= currentplayer.GetCardQuantity())
+                             {                            
+                                System.out.println("The AI Played -> Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
+                                currentplayer.PlayCard(currentHand.get(card_with_eight), discardpile);//as last resort, play the eighth card
+                                done = true;
                                 break;
-                            }                             
-                           continue; //keep going till its "true" or no match have been found!                           
-                            }                     
-                     else if(currentplayer.PlayAICard(currentHand.get(i), discardpile) == true)//if card match = true
-                        {   
-                            System.out.println("The AI Played -> Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
-                            currentplayer.PlayCard(currentHand.get(i), discardpile);//plays the first "true" matching cards
-                            done = true;
+                            }
+                            continue;
+                           }
+                           
+                           if(currentplayer.PlayAICard3(currentHand.get(j), discardpile) == 1)//play (any) card that isnt eight
+                            {                                   
+                                System.out.println("The AI Played -> Rank: "+c2.GetRank()+" Suit: "+c2.GetSuit());
+                                currentplayer.PlayCard(currentHand.get(j), discardpile);//plays the first "true" matching cards
+                                done = true;
                                 break;
-                         }                                          
-                    } 
-            }catch(Exception e)
+                            }                            
+                          }
+                          done = true;
+                          break;
+                        }
+                        
+                        if(currentplayer.PlayAICard(currentHand.get(i), discardpile) == 3)//if rank isn't eight, any card will do 
+                        
+                         {
+                           if(currentplayer.PlayAICard2(currentHand.get(i), discardpile) == -1)//if card doesnt match = false/-1
+                              { 
+                                   if(i+1 >= currentplayer.GetCardQuantity())//if all cards don't match = pull
+                                   {
+                                       System.out.println("The AI has pulled a card from deck!");
+                                       currentplayer.PullFromDeck(gamedeck);
+                                       done = true;
+                                       break;
+                                    }                             
+                                    continue; //keep going till its "valid" or no match have been found! 
+                                    
+                              }
+                              
+                           if(currentplayer.PlayAICard2(currentHand.get(i), discardpile) == 2)//play the card since its not eight
+                            {   System.out.println("The AI Played -> Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
+                                currentplayer.PlayCard(currentHand.get(i), discardpile);
+                                done = true;
+                                break;
+                            }
+                         }                        
+                     }            
+           }catch(Exception e)
             {
                 System.out.println(e);
-            }
+            }        
         }
-    }
+   }
 }
