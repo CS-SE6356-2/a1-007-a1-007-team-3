@@ -75,7 +75,7 @@ public class Main
                         {
                             prepareNewGame(in);
                             
-                            //get randome player from the selected amount of players so the user can always be random
+                            //get random player from the selected amount of players so the user can always be random
                             Random rand = new Random();
                             int p = rand.nextInt(numplayers);
                             JOptionPane.showMessageDialog(frame,"****** Singleplayer Game Has Been Launched! *****");
@@ -137,17 +137,64 @@ public class Main
                 break;
             
             case 2://Start in GUI mode
-                GUI gamedisplay = new GUI();
                 switch(playermode)
                 {   
                     case 1://Initialize local singleplayer
-                        //Do stuff here
+                        while (done == 0)
+                        {
+                            prepareNewGame(in);
+                            
+                            //get random player from the selected amount of players so the user can always be random
+                            Random rand = new Random();
+                            int p = rand.nextInt(numplayers);
+                            JOptionPane.showMessageDialog(frame,"****** Singleplayer Game Has Been Launched! *****");
+                            JOptionPane.showMessageDialog(frame,"****** You are player: #"+(p+1)+ " *****");
+                            
+                            GUI gamedisplay = new GUI(gamedeck, discardpile, numplayers);
+                            
+                            //The game cycles through each players turn until someone wins
+                            int playerIdx = 0;
+                            int winner = -1;
+                            while (winner == -1)
+                            {
+                                //This if statment is to control the user. Comment it out if you want AI vs AI.
+                                if (playerIdx == p)
+                                {
+                                    //System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
+                                    gamedisplay.setCurrentUserPlayer(players[playerIdx], playerIdx);//Player p gets to go
+                                    if(players[playerIdx].GetCardQuantity() == 0)
+                                    {
+                                        winner = playerIdx;
+                                        continue;//Skip over all other statements in the loop since this player won
+                                    }
+                                    playerIdx = (playerIdx+1)%numplayers;
+                                }
+                        
+                                gamedisplay.setCurrentAIPlayer(players[playerIdx]);//Player 1 gets to start the game
+                                if (players[playerIdx].GetCardQuantity() == 0)
+                                    winner = playerIdx;
+                                playerIdx = (playerIdx + 1) % numplayers;
+                            }
+                            
+                            if(winner != p)
+                            {
+                                System.out.println("****************You Lost!*******************");               
+                                System.out.println("Winner is player "+ (winner + 1));
+                                done = checkDone(in);
+                            }
+                            else
+                            {
+                                System.out.println("****************YOU WON!*******************");
+                                done = checkDone(in);
+                            }
+                        }
                         break;
                     
                     case 2://Initialize networked multiplayer
                         in.nextLine();//Clear the input buffer of any crap before entering in the IP address
                         n = new Network(in);
-                        n.processServerDataGraphical(gamedisplay);
+                        //commented this out to avoid the error, will fix when fitting GUI to Network
+                        //n.processServerDataGraphical(gamedisplay);
                         break;
                     
                     default://Should not get here. If we do, something went terribly wrong.

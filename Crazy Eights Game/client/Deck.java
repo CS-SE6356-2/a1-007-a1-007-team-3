@@ -25,7 +25,7 @@ public class Deck
     
     public void Shuffle()
     {
-        System.out.println("Preshuffle size " + cards.size());
+        //System.out.println("Preshuffle size " + cards.size());
         for(int iter = 0; iter < 100; iter++)
         {
             Stack<Card> A = new Stack<Card>();
@@ -43,7 +43,7 @@ public class Deck
             cards.addAll(A);
             cards.addAll(B);
         }
-        System.out.println("Postshuffle size " + cards.size());
+        //System.out.println("Postshuffle size " + cards.size());
     }
     
     public void InsertCard(Card card)//Insert a card onto the top of the deck
