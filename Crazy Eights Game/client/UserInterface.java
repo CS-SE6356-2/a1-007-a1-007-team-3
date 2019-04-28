@@ -14,32 +14,31 @@ import java.util.*;
  */
 public class UserInterface
 {
+    public static Scanner in;
     private Player currentplayer;
     private DiscardPile discardpile;
     private Deck gamedeck;
-    private Scanner in;
     
-    public UserInterface(Deck gamedeck, DiscardPile discardpile, Scanner in)
+    public UserInterface(Deck gamedeck, DiscardPile discardpile)
     {
         this.gamedeck = gamedeck;
         this.discardpile = discardpile;
-        this.in = in;
     }
     
-        //this method is to triger the AI display only opposed to the method bellow    
+    //This method is to triger the AI display in local singleplayer
     public void SetCurrentAIPlayer(Player player)
     {
         currentplayer = player;
         displayAI();
     }
-      //this method is to triger the user display only opposed to the method above
-
+    
+    //This method is to triger the user display in local singleplayer
     public void SetCurrentUserPlayer(Player player)
     {
         currentplayer = player;
         displayUser();
     }
-
+    
     public void displayUser()
     {
         System.out.println("You Have "+currentplayer.GetCardQuantity()+" Cards!");
@@ -166,4 +165,55 @@ public class UserInterface
             }        
         }
    }
+    
+    //This function displays the player's cards in a networked multiplayer game
+    public static void displayNetwork(ArrayList<Card> cards, Rank reqRank, Suit reqSuit)
+    {
+        System.out.println("You Have "+cards.size()+" Cards!");
+        System.out.println("Required rank: "+reqRank);
+        System.out.println("Required suit: "+reqSuit);
+        int i = 1;
+        for(int idx = 0; idx < cards.size(); idx++)
+        {
+            System.out.println("Card " + i + ":");
+            System.out.println("Rank: "+cards.get(idx).GetRank());
+            System.out.println("Suit: "+cards.get(idx).GetSuit());
+            i++;
+        }
+        if (reqRank == Rank.EIGHT)//No need to print out "You Must Play A Eight Or A (Some Rank) Or An Eight!". That's weird.
+            System.out.println("You Must Play A "+reqRank+" Or A "+reqSuit+"!");
+        else
+            System.out.println("You Must Play A "+reqRank+" Or A "+reqSuit+" Or An EIGHT!");
+    }
+    
+    public static int respond(ArrayList<Card> cards, Rank reqRank, Suit reqSuit)
+    {
+        boolean good = false;
+        int ret = 0;
+        while(!good)
+        {
+            System.out.println("Which Card Do You Want To Play? (Specify Using Card #. Type -1 For Draw)");
+            ret = in.nextInt();
+            if(ret < -1 || ret > cards.size() || ret == 0)
+            {
+                System.out.println("Not A Valid Card. Try Again.");
+                continue;
+            }
+            if(ret == -1)
+            {
+                good = true;
+                break;
+            }
+            Card c = cards.get(ret-1);//The index of the card in the ArrayList is the selected number minus 1.
+            if(c.GetRank() == Rank.EIGHT || c.GetRank() == reqRank || c.GetSuit() == reqSuit)
+            {
+                ret -= 1;//Decrement ret by 1 to pass the card index to the game server
+                good = true;
+            }else
+            {
+                System.out.println("The Selected Card Is Unplayable. Try Again.");
+            }
+        }
+        return ret;//The index of the card in the ArrayList is the selected number minus 1.
+    }
 }

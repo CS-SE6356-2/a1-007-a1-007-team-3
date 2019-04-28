@@ -18,6 +18,13 @@ public class Player
     private int numcards;
     private int score;
     private ArrayList<Card> cards;
+    //These variables are used by Yoseph's AI functions
+    private int faults = -1;
+    private int if_only_Eight = 0;    
+    private int any_But_Eight = 1;
+    private int any = 2;
+    private int not_Eight = 3;
+    private int ok = 4;
     
     public Player()
     {
@@ -50,13 +57,6 @@ public class Player
         }
     }
     
-    //i did this so it makes sence whats being sent
-    int fauls = -1;
-    int if_only_Eight = 0;    
-    int any_But_Eight = 1;
-    int any = 2;
-    int not_Eight = 3;
-    int ok = 4;
     int PlayAICard(Card card, DiscardPile target)
     {
         if(card.GetRank() == Rank.EIGHT)
@@ -74,7 +74,7 @@ public class Player
            {return any;}//any valid card would do
            
         if(card.GetRank() != target.GetRequiredRank() && card.GetSuit() != target.GetRequiredSuit() && card.GetRank() != Rank.EIGHT)
-            return fauls; //false-1 non valid pull
+            return faults; //false-1 non valid pull
             
             return ok; 
     }
@@ -89,7 +89,7 @@ public class Player
             return any_But_Eight;//play non-eight hand
             
             return ok; 
-    } 
+    }
     
     public ArrayList<Card> GetContents()
     {

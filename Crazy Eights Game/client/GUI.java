@@ -24,10 +24,6 @@ import java.util.*;
  */
 public class GUI extends JFrame {
 
-    private DiscardPile discardpile;
-    private Deck gamedeck;
-    private Player currentplayer;
-    private ArrayList<Card> hand;
     private int[] opponents;    //stores the quantity of cards in each opponents hand
     
     private JButton button1;
@@ -35,11 +31,8 @@ public class GUI extends JFrame {
     JPanel contentPane;
     public ArrayList<JButton> cards;
 
-    public GUI(Deck gamedeck, DiscardPile discardpile)
+    public GUI()
     {
-        this.gamedeck = gamedeck;
-        this.discardpile = discardpile;
-        
         contentPane = new JPanel(null);
         cards = new ArrayList<JButton>();
         initGUI();
@@ -94,14 +87,7 @@ public class GUI extends JFrame {
         this.setVisible(true);
     }
     
-    public void setCurrentPlayer(int index)
-    {
-        currentplayer = Control.players[index];
-        getOpponentCount(index);
-        updateGUI();
-    }
-    
-    public void updateGUI()
+    public void updateGUI(ArrayList<Card> hand, Rank reqRank, Suit reqSuit)
     {
         //updateGUI() TODO list
         //display the top card of the discard pile to the user
@@ -111,7 +97,6 @@ public class GUI extends JFrame {
 
         //From the contents of the current players hand, get the coordinates of each card from the spritesheet
         int x; int y;
-        hand = currentplayer.GetContents();
         for (Card i : hand)
         {
             //ordinal() gets the index of enumerators
@@ -124,24 +109,6 @@ public class GUI extends JFrame {
             //Finally, we display the image to the user
         }
         
-    }
-    
-    //Counts the number of cards left in each opponents hand to display to currently active player
-    public void getOpponentCount(int index)
-    {
-        int j = 0;
-        opponents = new int[Control.players.length - 1];
-        for (int i = 0; i < Control.players.length; i++)
-        {
-            //gets the information from each player EXCEPT the currently active player
-            if (i != index)
-            {
-                opponents[j] = Control.players[i].GetCardQuantity();
-                //Test purposes only, we want to display this information to the user graphically in updateGUI() using info in opponents[]
-                System.out.println("Player " + (i+1) + " has " + opponents[j] + " cards in their hand.");
-                j++;
-            }
-        }
     }
 
     public void addCard(int x, int y, int width, int height)//Adds a card to the screen
