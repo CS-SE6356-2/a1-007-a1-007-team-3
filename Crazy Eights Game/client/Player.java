@@ -18,6 +18,7 @@ public class Player
     private int numcards;
     private int score;
     private ArrayList<Card> cards;
+    public static int didsomething;
     //These variables are used by Yoseph's AI functions
     private int faults = -1;
     private int if_only_Eight = 0;    

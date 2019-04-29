@@ -79,7 +79,7 @@ public class Main
                             Random rand = new Random();
                             int p = rand.nextInt(numplayers);
                             JOptionPane.showMessageDialog(frame,"****** Singleplayer Game Has Been Launched! *****");
-                            JOptionPane.showMessageDialog(frame,"****** You are player: #"+(p+1)+ " *****");
+                            JOptionPane.showMessageDialog(frame,"****** You Are Player: #"+(p+1)+ " *****");
                             
                             UserInterface UI = new UserInterface(gamedeck, discardpile);
                             
@@ -111,7 +111,7 @@ public class Main
                             if(winner != p)
                             {
                                 System.out.println("****************You Lost!*******************");               
-                                System.out.println("Winner is player "+ (winner + 1));
+                                System.out.println("Winner Is Player "+ (winner + 1));
                                 done = checkDone(in);
                             }
                             else
@@ -148,7 +148,7 @@ public class Main
                             Random rand = new Random();
                             int p = rand.nextInt(numplayers);
                             JOptionPane.showMessageDialog(frame,"****** Singleplayer Game Has Been Launched! *****");
-                            JOptionPane.showMessageDialog(frame,"****** You are player: #"+(p+1)+ " *****");
+                            JOptionPane.showMessageDialog(frame,"****** You Are Player: #"+(p+1)+ " *****");
                             
                             GUI gamedisplay = new GUI(gamedeck, discardpile, numplayers);
                             
@@ -161,7 +161,7 @@ public class Main
                                 if (playerIdx == p)
                                 {
                                     //System.out.println("Launching UI For Player " + (playerIdx + 1) + "!");//Player number is their index + 1
-                                    gamedisplay.setCurrentUserPlayer(players[playerIdx], playerIdx);//Player p gets to go
+                                    gamedisplay.setCurrentUserPlayer(players[playerIdx], playerIdx, in);//Player p gets to go
                                     if(players[playerIdx].GetCardQuantity() == 0)
                                     {
                                         winner = playerIdx;
@@ -178,13 +178,14 @@ public class Main
                             
                             if(winner != p)
                             {
-                                System.out.println("****************You Lost!*******************");               
-                                System.out.println("Winner is player "+ (winner + 1));
+                                JOptionPane.showMessageDialog(frame,"****************You Lost!*******************");               
+                                JOptionPane.showMessageDialog(frame,"Winner Is Player "+ (winner + 1));
+                                JOptionPane.showMessageDialog(frame,"Wake Up The Command Line By Entering Something In And Pressing Enter.\n"+"You'll Be Asked If YOu Want TO Play Another Game.\n");
                                 done = checkDone(in);
                             }
                             else
                             {
-                                System.out.println("****************YOU WON!*******************");
+                                JOptionPane.showMessageDialog(frame,"****************YOU WON!*******************");
                                 done = checkDone(in);
                             }
                         }

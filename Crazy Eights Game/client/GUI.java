@@ -16,6 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * This class takes care of all player interactions with the game through a GUI.
  * @author Matthew Wethington, Martin Boerwinkle, Jonathan Guidry, Yoseph Wordofa
@@ -38,6 +40,7 @@ public class GUI extends JFrame {
     public JPanel contentPane;
     private JLabel drawPile, discard, card;
     private JLayeredPane handSpace;
+    private JFrame messages = new JFrame("JOptionPane showMessageDialog example");
     
 
     public GUI(Deck gameDeck, DiscardPile discardPile, int numPlayers)
@@ -102,13 +105,29 @@ public class GUI extends JFrame {
         this.pack();
         this.setVisible(true);
         this.setResizable(false);
+        
+        drawPile.addMouseListener(new MouseAdapter()//Have the game deck send a signal to the game when clicked on.
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                try
+                {
+                    currentPlayer.PullFromDeck(gameDeck);
+                    JOptionPane.showMessageDialog(messages,"****** You Drew From The Deck! *****");
+                    Player.didsomething = 1;//Signal the loop in setCurrentUserPlayer to exit
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
     }
         
-    public void setCurrentUserPlayer(Player p, int index)
+    public void setCurrentUserPlayer(Player p, int index, Scanner in)
     {
         currentPlayer = p;
         ArrayList<Card> currentHand = currentPlayer.GetContents();
         updateOpponentHandCount(index);
+        System.out.println(currentHand.size());
         
         //Clears the previous hand off the screen and resets the cards array list
         for (JLabel i : cards)
@@ -124,7 +143,7 @@ public class GUI extends JFrame {
             //ordinal() gets the index of enumerators
             posX = i.GetRank().ordinal();
             posY = i.GetSuit().ordinal();
-            addCard(posX, posY, handSize, j);
+            addCard(posX, posY, handSize, j, currentHand);
             j++;
         }
         
@@ -132,41 +151,20 @@ public class GUI extends JFrame {
         waitThreeSeconds();
         updateDiscard(true);
         
-        int i = 0;
-        boolean done = false;
-        while (!done){
-            
-            /*//placeholder to stop the game, remove this when actual interaction is implemented
-            if (i == 0){
-                System.out.println("program is stopped");
-                i++;
-            }*/
-            
-            /*
-            try
-            {
-                //int reqCard = in.nextInt();
-                if(reqCard == -1) //if click draw pile
-                {
-                    currentPlayer.PullFromDeck(gameDeck);
-                    done = true;
-                    continue;
-                }
-                //e;se if click card in hand
-                currentPlayer.PlayCard(currentHand.get(reqCard-1), discardPile);
-                done = true;
+        Player.didsomething = 0;
+        while (Player.didsomething == 0){
+            try {
+                Thread.sleep(500);//Wait for a signal from a mouselistener
             }
-            catch(Exception e){
-                System.out.println(e);
-                in.nextLine();//Consume the remaining invalid tokens to prevent an infinite error loop
-            }*/
-            
-            
+            catch(InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("Encountered Thread Interrupt.");
+            }
         }
     }
     
     //Adds a card to the screen
-    public void addCard(int posX, int posY, int handSize, int index)
+    public void addCard(int posX, int posY, int handSize, int index, ArrayList<Card> currentHand)
     {
         //The amount of distance between cards is dependant on the number of cards in the hand
         int x;
@@ -182,6 +180,7 @@ public class GUI extends JFrame {
         //create the card label, then add it to the cards array list
         BufferedImage deck = sourceDeck;
         card = new JLabel(new ImageIcon(cropImage(deck, posX, posY)));
+        
         card.setBounds((x * index), 0, scaleX, scaleY);
         
         //adds mouse listener that returns the index of the card
@@ -190,6 +189,22 @@ public class GUI extends JFrame {
         //add to a layered pane so that the cards layer on top of each other
         cards.add(card);
         handSpace.add(cards.get(index), -index);
+        cards.get(index).addMouseListener(new MouseAdapter()//Have cards in the player's hand send a signal to the game when clicked on.
+        {
+            public void mouseClicked(MouseEvent e)
+            {
+                try
+                {
+                    Card temp = currentHand.get(index);
+                    currentPlayer.PlayCard(temp, discardPile);
+                    JOptionPane.showMessageDialog(messages,"You Played A "+temp.GetRank()+" Of "+temp.GetSuit());
+                    Player.didsomething = 1;//Signal the loop in setCurrentUserPlayer to exit
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                    JOptionPane.showMessageDialog(messages,"The Clicked Card Is Unplayable. Please Try Again.");
+                }
+            }
+        });
         cards.get(index).setVisible(true);
     }
     
