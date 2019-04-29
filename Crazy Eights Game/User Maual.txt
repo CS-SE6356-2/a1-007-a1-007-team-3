@@ -1,0 +1,61 @@
+Game description:
+This game is an implementation of the card game Crazy Eights.
+
+Requirements:
+Your system must have a Java Runtime Environment installed to run the game. The JRE version must be at least Java 8.
+
+Executables:
+Our game ships as 2 executables. One is a client application and the other is a dedicated server application. The names of the applications make clear which is which. We also provide Windows batch files for easy execution on windows machines.
+
+Setting up a game and how to play:
+To start the game, you will launch the client application through run client.bat. The game will prompt you for a graphics mode to launch it in, and will then ask you if you want to play local singleplayer or multiplayer over your network. After specifying these parameters, the game will launch in the desired mode.
+
+To play the game, you will interact with the game’s interface. Specifically, you will click on cards in your hand to play them if you launch the game with a graphical interface. To draw cards, click on the game deck. Alternatively if you run the game in text based graphics mode, you will read lines of text that tell you what your cards are, and you will play cards by typing the card number. You can draw cards by typing in -1.
+
+Game options:
+Our client application has 2 display options. You can either choose between text based graphics or a GUI.
+
+After choosing the display mode, you may choose to play local singleplayer or networked multiplayer.
+
+Local play:
+Our client application is a full client, so you may choose to play local singleplayer against AI players.
+
+Networked play:
+To join a multiplayer game, simply type the IP address of the server you want to join when prompted.
+
+Hosting a server:
+To host a server, simply launch the dedicated server application by double clicking run server.bat.
+
+Alternatively, you may run the server application from the command line using the following arguments: java -jar Crazy_Eights.jar. Make sure you change the working directory to the directory you copied the game to first.
+
+How to use the server application:
+The server is autonomous and does not require management for the most part. It will report player activity to the operator. The only instance in which the server application requires user interaction is when the current game is over. It will ask the operator if everyone wants to play another game. If yes, a new game will be started for the connect players. If no, the server will signal the clients to terminate and will then terminate itself.
+
+Rules:
+You must play a card with the same rank or suit as the previously played card in the discard pile. Alternatively, you may play an eight regardless of the last played card. Eights serve as wild cards.
+
+If you do not have any playable cards, you must draw from the game deck (stock).
+
+You may play one card per turn.
+
+You win if you shed your cards before all other opponents do.
+
+Objective of the game:
+Crazy Eights is similar to another shedding style game called UNO. The objective is to shed all your cards before any of your opponents do. Should you succeed in this regard, you win!
+
+Compilation instructions:
+If you wish to compile the game from our source code, first make sure you have a Java Development Kit installed. The JDK version must be at least Java 8. Create separate projects in Netbeans, a popular Java IDE, for each application. For each project, copy all corresponding source files into the default package. After that, make sure the main class for the server project is Control, and the main class for the client project is Main. You can do this by right clicking on the project, selecting properties, and then by clicking the run tab. Finally, press the clean and build project button, or press Ctrl + F11 for each project. 
+
+Note: Make sure that deck.png is in the root directory of the project before compiling. Otherwise, there will be no images displayed in GUI mode.
+
+Following the compilation process, you will find the executable jar files in the projects’ respective dist folders.
+
+Installation and execution instructions:
+Simply copy or move Crazy_Eights.jar, deck.png, and run client.bat to any location you wish and run the game by double clicking on run client.bat. Make sure all 3 files are copied to the same directory.
+
+Alternatively, you may launch the game from the command line with the following arguments: java -jar Crazy_Eights.jar. Make sure you change the working directory to the directory you copied the game to first.
+
+If you are using MacOS or a Linux distro, you will have to run the game from the command line using the aforementioned command line arguments.
+
+Troubleshooting problems:
+Should you find yourself having trouble connecting to a server, first check that there is actually a network connection on both the client machine and the machine hosting the server. If there is, check your firewall settings and make sure that port 6677 isn’t blocked.
