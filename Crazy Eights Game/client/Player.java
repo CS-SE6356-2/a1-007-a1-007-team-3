@@ -18,7 +18,7 @@ public class Player
     private int numcards;
     private int score;
     private ArrayList<Card> cards;
-    public static int didsomething;
+    public static int cardselected;//Signifies the index of the card selected. This value is sent to the server in multiplayer.
     //These variables are used by Yoseph's AI functions
     private int faults = -1;
     private int if_only_Eight = 0;    
@@ -38,6 +38,11 @@ public class Player
     {
         cards.add(deck.GetTopCard());
         numcards = cards.size();
+    }
+    
+    public void CopyCardsFromServer(ArrayList<Card> servercards)//Used for network play only
+    {
+        cards = servercards;
     }
     
     public void PlayCard(Card card, DiscardPile target) throws Exception

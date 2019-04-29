@@ -1,11 +1,14 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 public class Network
 {
     Socket clientSocket;
     DataOutputStream outToServer;
     BufferedReader inFromServer;
+    JFrame messages = new JFrame("JOptionPane showMessageDialog example");
     
     public Network(String IPStr)
     {
@@ -52,10 +55,11 @@ public class Network
         }
     }
 
-    public void processServerData()
+    public void processServerData()throws Exception
     {
         Rank reqRank = Rank.ACE;
         Suit reqSuit = Suit.SPADE;
+        int whatever = Integer.parseInt(inFromServer.readLine());//Be very apathetic and completely disregard the first number the server sends you
         
         while (true)//The program will continue executing until the user exits
         {
@@ -106,35 +110,38 @@ public class Network
         }
     }
     
-    public void processServerDataGraphical(GUI display)
+    public void processServerDataGraphical()throws Exception
     {
-        ArrayList<Card> cards = new ArrayList<Card>();
         Rank reqRank = Rank.ACE;
         Suit reqSuit = Suit.SPADE;
+        int numplayers = Integer.parseInt(inFromServer.readLine());//The first number the server sends clients is the number of players there will be
+        GUI gui = new GUI(numplayers);
+        JOptionPane.showMessageDialog(messages,"Waiting On Other Players...");
         
         while (true)//The program will continue executing until the user exits
         {
+            ArrayList<Card> cards = new ArrayList<Card>();
             try
             {
                 int num = Integer.parseInt(inFromServer.readLine());
             
                 if (num == 0)//If the size of that player's deck is 0, the server tells them they won
                 {
-                    System.out.println("You Won!");
+                    JOptionPane.showMessageDialog(messages,"You Won!");
                     continue;//Skip the other statements in this iteration. The player won, so no need to read in any more card data until the next game.
                 }
                 else if (num == -1)
                 {
                     int winner = Integer.parseInt(inFromServer.readLine());//The server will announce the winner to losing players
-                    System.out.println("Player " + winner + " Won The Game!");
+                    JOptionPane.showMessageDialog(messages,"Player " + winner + " Won The Game!");
                     continue;
                 }
                 else if (num == -2)//The server signaled a shutdown
                 {
                     //The server signals clients to terminate if the server itself is told to terminate.
                     //This is to avoid weird bugs when the server closes but the clients are left running.
-                    System.out.println("Server Initialized Shutdown.");
-                    System.out.println("Thanks For Playing!");
+                    JOptionPane.showMessageDialog(messages,"Server Initialized Shutdown.");
+                    JOptionPane.showMessageDialog(messages,"Thanks For Playing!");
                     System.exit(0);//Terminate the program
                 }
             
@@ -149,14 +156,14 @@ public class Network
             }catch(Exception e){
                 System.out.println("Server Read Failed.");
             }
-            display.updateGUI(cards, reqRank, reqSuit);
+            gui.displayNetwork(cards, reqRank, reqSuit);
             try
             {
-                outToServer.writeBytes(UserInterface.respond(cards, reqRank, reqSuit)+"\n");
+                outToServer.writeBytes(gui.respond()+"\n");
             }catch(Exception e){
                 System.out.println("Failed To Respond To Server");
             }
-            System.out.println("Waiting On Other Players...");
+            JOptionPane.showMessageDialog(messages,"Waiting On Other Players...");
         }
     }
 }

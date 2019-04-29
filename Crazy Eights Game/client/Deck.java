@@ -23,6 +23,12 @@ public class Deck
         this.linkedPile = linkedPile;
     }
     
+    public Deck()//Constructor for dummy deck for local use in multiplayer
+    {
+        cards = new Stack<Card>();
+        cards.add(new Card(null, null));//Add a dummy card with null attributes
+    }
+    
     public void Shuffle()
     {
         //System.out.println("Preshuffle size " + cards.size());

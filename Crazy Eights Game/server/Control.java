@@ -97,6 +97,7 @@ public class Control
             for (int i = 0; i < numplayers; i++)
             {
                 players[i] = new Player(welcomeSocket.accept());
+                players[i].outToClient.writeBytes(numplayers+"\n");//Tell all players how many players there are going to be. Only used if the client is launched in GUI mode.
                 System.out.println("Player " + (i+1) + " Has Joined!");
             }
         }catch(Exception e){

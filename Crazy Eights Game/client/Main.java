@@ -8,7 +8,7 @@ public class Main
     public static Player players[];
     private static int numplayers;
     
-    public static void main(String args[])
+    public static void main(String args[])throws Exception
     {
         Scanner in = new Scanner(System.in);
         int done = 0;//Flag to tell us when to terminate the program
@@ -180,7 +180,7 @@ public class Main
                             {
                                 JOptionPane.showMessageDialog(frame,"****************You Lost!*******************");               
                                 JOptionPane.showMessageDialog(frame,"Winner Is Player "+ (winner + 1));
-                                JOptionPane.showMessageDialog(frame,"Wake Up The Command Line By Entering Something In And Pressing Enter.\n"+"You'll Be Asked If YOu Want TO Play Another Game.\n");
+                                JOptionPane.showMessageDialog(frame,"Wake Up The Command Line By Entering Something In And Pressing Enter.\n"+"You'll Be Asked If You Want To Play Another Game.\n");
                                 done = checkDone(in);
                             }
                             else
@@ -194,8 +194,7 @@ public class Main
                     case 2://Initialize networked multiplayer
                         in.nextLine();//Clear the input buffer of any crap before entering in the IP address
                         n = new Network(in);
-                        //commented this out to avoid the error, will fix when fitting GUI to Network
-                        //n.processServerDataGraphical(gamedisplay);
+                        n.processServerDataGraphical();
                         break;
                     
                     default://Should not get here. If we do, something went terribly wrong.

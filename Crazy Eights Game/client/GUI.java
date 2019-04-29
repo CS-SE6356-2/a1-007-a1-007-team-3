@@ -16,8 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  * This class takes care of all player interactions with the game through a GUI.
  * @author Matthew Wethington, Martin Boerwinkle, Jonathan Guidry, Yoseph Wordofa
@@ -50,6 +48,28 @@ public class GUI extends JFrame {
         this.numPlayers = numPlayers;
         contentPane = new JPanel(null);
         cards = new ArrayList<>();
+        
+        try {
+            //Source image needs to be in root directory in order to be found
+            sourceDeck = ImageIO.read(new FileInputStream(imgName));
+        } catch (IOException ex){
+            System.err.println("Caught IOException: " +  ex.getMessage());
+        }
+        
+        //overridable method calls?
+        initGUI();
+        initTable();
+    }
+    
+    public GUI(int numplayers)//Costructor for network game
+    {
+        this.gameDeck = new Deck();//Dummy game deck to trick the client. The server will give us a card.
+        this.numPlayers = numplayers;
+        this.discardPile = new DiscardPile();//Will be used to store the top card from the discard pile from a server
+        this.currentPlayer = new Player();//This player is local to the client machine
+        contentPane = new JPanel(null);
+        cards = new ArrayList<>();
+        
         
         try {
             //Source image needs to be in root directory in order to be found
@@ -114,7 +134,7 @@ public class GUI extends JFrame {
                 {
                     currentPlayer.PullFromDeck(gameDeck);
                     JOptionPane.showMessageDialog(messages,"****** You Drew From The Deck! *****");
-                    Player.didsomething = 1;//Signal the loop in setCurrentUserPlayer to exit
+                    Player.cardselected = -1;//Signal the loop in setCurrentUserPlayer to exit
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
@@ -127,7 +147,6 @@ public class GUI extends JFrame {
         currentPlayer = p;
         ArrayList<Card> currentHand = currentPlayer.GetContents();
         updateOpponentHandCount(index);
-        System.out.println(currentHand.size());
         
         //Clears the previous hand off the screen and resets the cards array list
         for (JLabel i : cards)
@@ -148,11 +167,11 @@ public class GUI extends JFrame {
         }
         
         output.setText("It is now your turn...");
-        waitThreeSeconds();
+        waitOneSecond();
         updateDiscard(true);
         
-        Player.didsomething = 0;
-        while (Player.didsomething == 0){
+        Player.cardselected = Integer.MAX_VALUE;
+        while (Player.cardselected == Integer.MAX_VALUE){
             try {
                 Thread.sleep(500);//Wait for a signal from a mouselistener
             }
@@ -198,7 +217,7 @@ public class GUI extends JFrame {
                     Card temp = currentHand.get(index);
                     currentPlayer.PlayCard(temp, discardPile);
                     JOptionPane.showMessageDialog(messages,"You Played A "+temp.GetRank()+" Of "+temp.GetSuit());
-                    Player.didsomething = 1;//Signal the loop in setCurrentUserPlayer to exit
+                    Player.cardselected = index;//Signal the loop in setCurrentUserPlayer to exit using the index value of the card
                 } catch (Exception ex) {
                     System.out.println(ex);
                     JOptionPane.showMessageDialog(messages,"The Clicked Card Is Unplayable. Please Try Again.");
@@ -234,7 +253,7 @@ public class GUI extends JFrame {
                                     output.setText("The AI Played -> Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
                                     currentPlayer.PlayCard(currentHand.get(card_with_eight), discardPile);//as last resort, play the eighth card
                                     updateDiscard(false);
-                                    waitThreeSeconds();
+                                    waitOneSecond();
                                     done = true;
                                     break;
                                 }
@@ -245,7 +264,7 @@ public class GUI extends JFrame {
                                 output.setText("The AI Played -> Rank: "+c2.GetRank()+" Suit: "+c2.GetSuit());
                                 currentPlayer.PlayCard(currentHand.get(j), discardPile);//plays the first "true" matching cards
                                 updateDiscard(false);
-                                waitThreeSeconds();
+                                waitOneSecond();
                                 done = true;
                                 break;
                             }                            
@@ -261,7 +280,7 @@ public class GUI extends JFrame {
                             {
                                 output.setText("The AI has pulled a card from deck!");
                                 currentPlayer.PullFromDeck(gameDeck);
-                                waitThreeSeconds();
+                                waitOneSecond();
                                 done = true;
                                 break;
                             }                             
@@ -272,7 +291,7 @@ public class GUI extends JFrame {
                             output.setText("The AI Played -> Rank: "+c.GetRank()+" Suit: "+c.GetSuit());
                             currentPlayer.PlayCard(currentHand.get(i), discardPile);
                             updateDiscard(false);
-                            waitThreeSeconds();
+                            waitOneSecond();
                             done = true;
                             break;
                         }
@@ -314,6 +333,66 @@ public class GUI extends JFrame {
                 j++;
             }
         }
+    }
+    
+     //This function displays the player's cards in a networked multiplayer game
+    public void displayNetwork(ArrayList<Card> currentHand, Rank reqRank, Suit reqSuit)
+    {
+        discardPile.InsertCard(new Card(reqSuit, reqRank));//Tell the client what card the server is requiring the player to play
+        currentPlayer.CopyCardsFromServer(currentHand);//Update the local player's hand
+        //Clears the previous hand off the screen and resets the cards array list
+        for (JLabel i : cards)
+            handSpace.remove(i);
+        this.repaint();
+        cards.clear();
+        cards.trimToSize();
+        
+        //From the contents of the current players hand, build the new hand, calling addCard() to print it
+        int posX, posY, j = 0, handSize = currentHand.size();
+        for (Card i : currentHand)
+        {
+            //ordinal() gets the index of enumerators
+            posX = i.GetRank().ordinal();
+            posY = i.GetSuit().ordinal();
+            addCard(posX, posY, handSize, j, currentHand);
+            j++;
+        }
+        
+        output.setText("It is now your turn...");
+        waitOneSecond();
+        updateDiscardNetwork(reqRank, reqSuit);
+        
+        Player.cardselected = Integer.MAX_VALUE;
+        while (Player.cardselected == Integer.MAX_VALUE){
+            try {
+                Thread.sleep(500);//Wait for a signal from a mouselistener
+            }
+            catch(InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("Encountered Thread Interrupt.");
+            }
+        }
+    }
+    
+    public int respond()
+    {
+        gameDeck.InsertCard(new Card(null, null));//Replace the dummy card
+        return Player.cardselected;//The index of the card in the ArrayList is the selected number minus 1.
+    }
+    
+    public void updateDiscardNetwork(Rank reqRank, Suit reqSuit)
+    {
+        BufferedImage deck = sourceDeck;
+        int disX = reqRank.ordinal();
+        int disY = reqSuit.ordinal();
+        discard.setIcon(new ImageIcon(cropImage(deck, disX, disY)));
+        
+        //Display information from the text box
+        if (reqRank == Rank.EIGHT)
+            output.setText("You must play a(n) "+ reqRank + " or a "+ reqSuit + "!");
+        else
+            output.setText("You must play a(n) "+ reqRank + " or a "+ reqSuit + " or an EIGHT!");
+        discard.setVisible(true);
     }
     
     //Depending on the number of players in the game, sets up different table layouts
@@ -533,11 +612,11 @@ public class GUI extends JFrame {
     }
       
     //pauses the game for a couple seconds so that user can see AI make a move
-    private void waitThreeSeconds()
+    private void waitOneSecond()
     {
         try {
             //pauses for 3000 milliseconds
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         }
         catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
